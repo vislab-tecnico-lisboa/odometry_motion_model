@@ -26,14 +26,30 @@ class OdometryMotionModel
     void drawCovariance(const Eigen::Matrix<double,3,1>& mean, const Eigen::Matrix<double,3,3>& covMatrix);
 
     bool use_tf;
-    // Motion model params
+
+    // Odometry motion model params
     double alpha_1, alpha_2, alpha_3, alpha_4;
 
+    Eigen::Matrix<double,2,2> getVelocityCov(const double & v,
+                                             const double & w,
+                                             const double & alpha_1_,
+                                             const double & alpha_2_,
+                                             const double & alpha_3_,
+                                             const double & alpha_4_)
+    {
+        Eigen::Matrix<double,2,2> M;
+        M(0,0)=alpha_1_*v*v+alpha_2_*w*w;
+        M(1,1)=alpha_3_*v*v+alpha_4_*w*w;
 
+        Eigen::Matrix<double,3,2> V;
+
+        return M;
+    }
 
     Eigen::Matrix<double,3,1> X;
     Eigen::Matrix<double,3,3> Q;
     double last_yaw;
+    bool first;
 
 public:
     OdometryMotionModel(const ros::NodeHandle & nh_);
