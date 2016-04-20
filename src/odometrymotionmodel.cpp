@@ -38,13 +38,13 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     double dtheta=yaw-last_yaw;
 
     //std::cout << yaw << " " << last_yaw<< std::endl;
-    double delta_rot1=atan2(dy,dx)-X[2];
+    double delta_rot1=atan2(dy,dx);
     double delta_trans=sqrt(dx*dx+dy*dy);
     double delta_rot2=dtheta-delta_rot1;
     //std::cout << "dx:"<< dx<< " dy:"<< dy << " dtheta:"<< dtheta<< std::endl;
     // Update odom
-    X[0] += cos(X[2]+delta_rot1)*delta_trans;
-    X[1] += sin(X[2]+delta_rot1)*delta_trans;
+    X[0] += cos(delta_rot1)*delta_trans;
+    X[1] += sin(delta_rot1)*delta_trans;
     X[2] += dtheta;
     angleOverflowCorrect(X[2]);
 
