@@ -28,7 +28,7 @@ OdometryMotionModel::OdometryMotionModel(const ros::NodeHandle & nh_) : nh_priv(
 
 void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & odom_msg)
 {
-
+    double delta_t=(odom_msg->header.stamp-last_odom_msg.header.stamp).toSec();
     tf::Quaternion q(odom_msg->pose.pose.orientation.x, odom_msg->pose.pose.orientation.y, odom_msg->pose.pose.orientation.z, odom_msg->pose.pose.orientation.w);
     double roll, pitch, yaw;
     tf::Matrix3x3(q).getRPY(roll, pitch, yaw);
@@ -48,15 +48,15 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     X[2] += dtheta;
     angleOverflowCorrect(X[2]);
 
-    double sigma_rot1=alpha_1*fabs(delta_rot1)+alpha_2*delta_trans;
-    double sigma_trans=alpha_3*delta_trans+alpha_4*(fabs(delta_rot1+delta_rot2));
-    double sigma_rot2=alpha_1*fabs(delta_rot2)+alpha_2*delta_trans;
+    double var_rot1=alpha_1*delta_rot1*delta_rot1+alpha_2*delta_trans*delta_trans;
+    double var_trans=alpha_3*delta_trans*delta_trans+alpha_4*(delta_rot1*delta_rot1+delta_rot2*delta_rot2);
+    double var_rot2=alpha_1*delta_rot2*delta_rot2+alpha_2*delta_trans*delta_trans;
     Eigen::Matrix<double,3,3> Sigma;
-    Sigma(0,0)=sigma_rot1*sigma_rot1;
-    Sigma(1,1)=sigma_trans*sigma_trans;
-    Sigma(2,2)=sigma_rot2*sigma_rot2;
+    Sigma(0,0)=var_rot1;
+    Sigma(1,1)=var_trans;
+    Sigma(2,2)=var_rot2;
 
-    std::cout << "SIGMA:"<< Sigma << std::endl;
+    //std::cout << "SIGMA:"<< Sigma << std::endl;
 
     Eigen::Matrix<double,3,3> J;
     J(0,0)=-sin(delta_rot1); J(0,1)=cos(delta_rot1); J(0,2)=0;
@@ -72,6 +72,8 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     odom_msg_out.pose.pose.position.y=X[1];
     odom_msg_out.pose.pose.position.z=0;
     odom_msg_out.pose.pose.orientation=quat;
+    odom_msg_out.twist.twist.linear.x=delta_trans/delta_t;
+    odom_msg_out.twist.twist.angular.z=dtheta/delta_t;
 
     for(int i=0; i<3; ++i)
     {
