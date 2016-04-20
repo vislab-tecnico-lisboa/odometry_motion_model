@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- ROS head file to simulate vizzy in gazebo -->
+<launch>
+
+
+  <arg name="left_camera_info_topic" default="/vizzy/stereo/l_camera/camera_info"/>
+  <arg name="right_camera_info_topic" default="/vizzy/stereo/r_camera/camera_info"/>
+
+  <!-- nodelet manager -->
+  <!--<node pkg="nodelet" type="nodelet" name="odometry_motion_model_manager" args="manager" respawn="true" output="screen"/>
+
+  <node pkg="nodelet" type="nodelet" name="odometry_motion_model" args="load odometry_motion_model/PeripheralStereoRosNodelet odometry_motion_model_manager" respawn="true" output="screen" >
+    <rosparam file="$(find odometry_motion_model)/config/parameters.yaml" command="load" />
+  </node>-->
+
+  <!--<node pkg="nodelet" type="nodelet" name="odometry_motion_model_manager" args="manager" respawn="true" output="screen"/>-->
+
+  <node pkg="odometry_motion_model" type="odometry_motion_model_node" name="odometry_motion_model" respawn="true" output="screen" >
+    <rosparam file="$(find odometry_motion_model)/config/parameters.yaml" command="load" />
+  </node>
+
+  <!--<node pkg="nodelet" type="nodelet" name="egosphere" args="load foveated_stereo_ros/EgoSphereManagerRosNodelet odometry_motion_model_manager" respawn="true" output="screen">
+    <param name="data_folder" value="$(find foveated_stereo_ros)/data" />
+    <rosparam file="$(find foveated_stereo_ros)/config/frames.yaml" command="load" />
+    <rosparam file="$(find foveated_stereo_ros)/config/egosphere.yaml" command="load" />
+    <rosparam file="$(find foveated_stereo_ros)/config/decision_making.yaml" command="load" />
+  </node>-->
+</launch>
