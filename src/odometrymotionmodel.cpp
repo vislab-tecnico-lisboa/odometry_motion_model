@@ -94,10 +94,10 @@ void OdometryMotionModel::drawCovariance(const Eigen::Matrix<double,3,1>& mean, 
     tempMarker.pose.position.x = 0;
     tempMarker.pose.position.y = 0;
 
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double,3,3> > eig(covMatrix);
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix<double,2,2> > eig(covMatrix.block<2,2>(0,0));
 
-    const Eigen::Matrix<double,3,1>& eigValues (eig.eigenvalues());
-    const Eigen::Matrix<double,3,3>& eigVectors (eig.eigenvectors());
+    const Eigen::Matrix<double,2,1>& eigValues (eig.eigenvalues());
+    const Eigen::Matrix<double,2,2>& eigVectors (eig.eigenvectors());
 
     float angle = (atan2(eigVectors(1, 0), eigVectors(0, 0)));
 
