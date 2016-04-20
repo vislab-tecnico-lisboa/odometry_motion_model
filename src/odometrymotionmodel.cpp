@@ -55,7 +55,7 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
 
     std::cout << "delta_rot_before:"<< delta_rot1 << std::endl;
     std::cout << fabs(dx) << std::endl;
-    if(fabs(dy)<0.01)
+    if(fabs(dy)<0.001)
     {
         delta_rot1=0.0;
         delta_rot2=dtheta;
