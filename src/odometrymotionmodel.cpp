@@ -50,11 +50,11 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     double delta_trans=sqrt(dx*dx+dy*dy);
     double delta_rot2=dtheta-delta_rot1;
     double delta_t=(odom_msg->header.stamp-last_odom_msg.header.stamp).toSec();
-    std::cout << "dx:"<< dx << std::endl;
-    std::cout << "dy:"<< dy << std::endl;
+//    std::cout << "dx:"<< dx << std::endl;
+//    std::cout << "dy:"<< dy << std::endl;
 
-    std::cout << "delta_rot_before:"<< delta_rot1 << std::endl;
-    std::cout << fabs(dx) << std::endl;
+//    std::cout << "delta_rot_before:"<< delta_rot1 << std::endl;
+//    std::cout << fabs(dx) << std::endl;
     if(fabs(dy)<0.001)
     {
         delta_rot1=0.0;
@@ -79,7 +79,7 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     Sigma(1,1)=var_trans;
     Sigma(2,2)=var_rot2;
 
-    std::cout << "SIGMA:"<< Sigma << std::endl;
+//    std::cout << "SIGMA:"<< Sigma << std::endl;
     Eigen::Matrix<double,3,3> J;
     J(0,0)=1;  J(0,1)=0;  J(0,2)=-delta_trans*sin(last_yaw+delta_rot1);
     J(1,0)=0;  J(1,1)=1;  J(1,2)=delta_trans*cos(last_yaw+delta_rot1);
