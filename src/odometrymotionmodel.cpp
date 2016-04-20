@@ -52,10 +52,10 @@ void OdometryMotionModel::odometry_callback(const nav_msgs::OdometryConstPtr & o
     double sigma_trans=alpha_3*delta_trans+alpha_4*(fabs(delta_rot1+delta_rot2));
     double sigma_rot2=alpha_1*fabs(delta_rot2)+alpha_2*delta_trans;
     Eigen::Matrix<double,3,3> Sigma;
-    Sigma(0,0)=sigma_trans;
-    Sigma(1,1)=sigma_rot1;
+    Sigma(0,0)=sigma_rot1;
+    Sigma(1,1)=sigma_trans;
     Sigma(2,2)=sigma_rot2;
-
+    std::cout << "sigma_rot1:"<< sigma_rot1 << " sigma_trans:" << sigma_trans << " sigma_rot2:"<< sigma_rot2 << std::endl;
     Eigen::Matrix<double,3,3> J;
     J(0,0)=-sin(delta_rot1); J(0,1)=cos(delta_rot1); J(0,2)=0;
     J(1,0)=cos(delta_rot1);  J(1,1)=sin(delta_rot1);  J(1,2)=0;
